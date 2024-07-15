@@ -21,9 +21,13 @@ func getNote(w http.ResponseWriter, req *http.Request) {
 }
 
 type Note struct {
-	Id      int    `json:"id"`
 	Title   string `json:"title"`
 	Content string `json:"content"`
+	Id      int    `json:"id"`
+}
+
+func NewNote() Note {
+	return Note{}
 }
 
 func createNote(w http.ResponseWriter, req *http.Request) {
@@ -40,8 +44,6 @@ func createNote(w http.ResponseWriter, req *http.Request) {
 		fmt.Println("Error decoding")
 	}
 	fmt.Println(note)
-	// fmt.Println(note.Id)
-	// fmt.Println(note.Title)
 }
 
 func main() {
