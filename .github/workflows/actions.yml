@@ -15,6 +15,8 @@ jobs:
           go-version: '1.22.x'
       - name: Build
         run: go build -o server backend/server/server.go 
+      # - name: Build db
+        # run: go build -o db database/db/db.go 
     #   - name: Test with the Go CLI
     #     run: go test ./...
   Fmt:
@@ -27,7 +29,9 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.22.x'
-      - name: Format
+      - name: Format backend
         run: cd backend && go fmt ./...
+      - name: Format db
+        run: cd database && go fmt ./... && cd ..
     #   - name: Golangci Linter
     #     uses: golangci/golangci-lint-action@v6
