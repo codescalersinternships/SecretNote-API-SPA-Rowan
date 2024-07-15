@@ -17,7 +17,7 @@ jobs:
         run: go build -o server backend/server/server.go 
     #   - name: Test with the Go CLI
     #     run: go test ./...
-  Lint:
+  Fmt:
     runs-on: ubuntu-latest
 
     steps:
