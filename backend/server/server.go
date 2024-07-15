@@ -1,6 +1,5 @@
-package server
+package main
 
-import(
-	// "fmt"
+import (
+// "fmt"
 )
-
