@@ -21,7 +21,7 @@ func NewNote() Note {
 func getNote(w http.ResponseWriter, req *http.Request) {
 	if req.Method != http.MethodGet {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprint(w, "Error method of '/getNote' request should be GET!")		
+		fmt.Fprint(w, "Error method of '/getNote' request should be GET!")
 		return
 	}
 	_, err := io.ReadAll(req.Body)
@@ -37,7 +37,7 @@ func getNote(w http.ResponseWriter, req *http.Request) {
 func getNotes(w http.ResponseWriter, req *http.Request) {
 	if req.Method != http.MethodGet {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprint(w, "Error method of '/getNotes' request should be GET!")		
+		fmt.Fprint(w, "Error method of '/getNotes' request should be GET!")
 		return
 	}
 	_, err := io.ReadAll(req.Body)
@@ -53,7 +53,7 @@ func getNotes(w http.ResponseWriter, req *http.Request) {
 func createNote(w http.ResponseWriter, req *http.Request) {
 	if req.Method != http.MethodPost {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprint(w, "Error method of '/createNote' request should be POST!")		
+		fmt.Fprint(w, "Error method of '/createNote' request should be POST!")
 		return
 	}
 	str, _ := io.ReadAll(req.Body)
@@ -66,8 +66,6 @@ func createNote(w http.ResponseWriter, req *http.Request) {
 	}
 	fmt.Println(note)
 }
-
-
 
 func main() {
 	http.HandleFunc("/getNote", getNote)
