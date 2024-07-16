@@ -1,5 +1,6 @@
 /server
 /backend/client
 /backend/serve
+/backend/db
 /db
-/database/test.db
+/database

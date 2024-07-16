@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	// pkg "github.com/codescalersinternships/SecretNote-API-SPA-Rowan/pkg"
 )
 
 type Note struct {
@@ -62,13 +63,15 @@ func createNote(c *gin.Context) {
 }
 
 func main() {
-	router := gin.Default()
-	router.GET("/getNote", getNote)
-	router.GET("/getNotes", getNotes)
-	router.POST("/createNote", createNote)
-	err := router.Run(":8080")
-	if err != nil {
-		fmt.Printf("error starting the server: %s\n", err)
-		os.Exit(1)
-	}
+	// router := gin.Default()
+	// router.GET("/getNote", getNote)
+	// router.GET("/getNotes", getNotes)
+	// router.POST("/createNote", createNote)
+	// err := router.Run(":8080")
+	// if err != nil {
+	// 	fmt.Printf("error starting the server: %s\n", err)
+	// 	os.Exit(1)
+	// }
+	// app := pkg.NewApp()
+
 }
