@@ -33,6 +33,7 @@ func NewDB() *DB {
 	return &newDB
 }
 
+// imp check if user already exists !!
 func (dbm *DB) CreateUser(username, password string) error {
 	user := User{Username: username, Password: password}
 	result := dbm.db.Create(&user)
