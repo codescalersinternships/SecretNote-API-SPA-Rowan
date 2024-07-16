@@ -21,9 +21,7 @@ type User struct {
 	Username string
 	Password string
 }
-
+var db, _ = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 func main() {
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
-	print(db)
-	print(err)
+	db.AutoMigrate(&User{})
 }

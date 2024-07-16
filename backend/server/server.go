@@ -18,6 +18,7 @@ func NewNote() Note {
 	return Note{}
 }
 func getNote(c *gin.Context) {
+	// id := c.Param("notes")
 	_, err := io.ReadAll(c.Request.Body)
 	if err != nil {
 		fmt.Println("error detected while reading request body")
