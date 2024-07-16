@@ -19,7 +19,7 @@ func NewApp() *App {
 
 func (app *App) registerRoutes() {
 	app.router.POST("/note/", app.createNote)
-	app.router.POST("/note/:noteID", app.getNote) // still handle id retreieving
+	app.router.GET("/note/:noteID", app.getNote) // still handle id retreieving
 }
 
 func (app *App) createNote(c *gin.Context) {

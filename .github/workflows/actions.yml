@@ -14,7 +14,7 @@ jobs:
         with:
           go-version: '1.22.x'
       - name: Build
-        run: cd backend && go build -o serve server/server.go && cd ..
+        run: cd backend && go build -o serve cmd/server.go && cd ..
       - name: Build db
         run: cd backend && go build -o db pkg/db.go && cd ..
     #   - name: Test with the Go CLI
