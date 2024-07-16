@@ -1,79 +1,73 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 	"os"
 )
 
 type Note struct {
+	Id      int    `json:"id"`
 	Title   string `json:"title"`
 	Content string `json:"content"`
-	Id      int    `json:"id"`
 }
 
 func NewNote() Note {
 	return Note{}
 }
-
-func getNote(w http.ResponseWriter, req *http.Request) {
-	if req.Method != http.MethodGet {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprint(w, "Error method of '/getNote' request should be GET!")
-		return
-	}
-	_, err := io.ReadAll(req.Body)
+func getNote(c *gin.Context) {
+	_, err := io.ReadAll(c.Request.Body)
 	if err != nil {
 		fmt.Println("error detected while reading request body")
 		os.Exit(1)
 	}
-	// str := string(body)
-	// fmt.Println(string(body))
-	fmt.Fprint(w, "helloooooooooo")
+
+	if err != nil {
+		fmt.Println("error marshalling")
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"id":      6,
+		"title":   "hello world",
+		"content": "cute",
+	})
 }
 
-func getNotes(w http.ResponseWriter, req *http.Request) {
-	if req.Method != http.MethodGet {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprint(w, "Error method of '/getNotes' request should be GET!")
-		return
-	}
-	_, err := io.ReadAll(req.Body)
+func getNotes(c *gin.Context) {
+	_, err := io.ReadAll(c.Request.Body)
 	if err != nil {
 		fmt.Println("error detected while reading request body")
 		os.Exit(1)
 	}
-	// str := string(body)
-	// fmt.Println(string(body))
-	fmt.Fprint(w, "helloooooooooo")
+	if err != nil {
+		fmt.Println("error marshalling")
+	}
+	var notes []Note
+	notes = append(notes, Note{50, "sheer", "cups"})
+	notes = append(notes, Note{18, "pizza", "ranch"})
+	notes = append(notes, Note{16, "Lamin", "Yamal"})
+	c.JSON(http.StatusOK, notes)
 }
 
-func createNote(w http.ResponseWriter, req *http.Request) {
-	if req.Method != http.MethodPost {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprint(w, "Error method of '/createNote' request should be POST!")
-		return
+func createNote(c *gin.Context) {
+	var newNote Note
+	if err := c.ShouldBindJSON(&newNote); err != nil {
+		c.Error(err)
+		c.AbortWithStatus(http.StatusBadRequest)
 	}
-	str, _ := io.ReadAll(req.Body)
-	var note Note
-	// fmt.Println(string(str))
-	// err := json.NewDecoder(req.Body).Decode(&note)
-	err := json.Unmarshal(str, &note)
-	if err != nil {
-		fmt.Println("Error decoding")
-	}
-	fmt.Println(note)
+	fmt.Println(newNote)
+	c.JSON(http.StatusOK, newNote)
 }
 
 func main() {
-	http.HandleFunc("/getNote", getNote)
-	http.HandleFunc("/getNotes", getNotes)
-	http.HandleFunc("/createNote", createNote)
-	err := http.ListenAndServe(":8080", nil)
+	router := gin.Default()
+	router.GET("/getNote", getNote)
+	router.GET("/getNotes", getNotes)
+	router.POST("/createNote", createNote)
+	err := router.Run(":8080")
 	if err != nil {
-		fmt.Println("error detected while reading request body")
+		fmt.Printf("error starting the server: %s\n", err)
 		os.Exit(1)
 	}
 }

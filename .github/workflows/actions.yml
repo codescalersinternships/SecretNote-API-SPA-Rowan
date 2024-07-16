@@ -14,7 +14,7 @@ jobs:
         with:
           go-version: '1.22.x'
       - name: Build
-        run: go build -o server backend/server/server.go 
+        run: cd backend && go build -o serve server/server.go && cd ..
       # - name: Build db
         # run: go build -o db database/db/db.go 
     #   - name: Test with the Go CLI
@@ -30,7 +30,7 @@ jobs:
         with:
           go-version: '1.22.x'
       - name: Format backend
-        run: cd backend && go fmt ./...
+        run: cd backend && go fmt ./... && cd ..
       - name: Format db
         run: cd database && go fmt ./... && cd ..
     #   - name: Golangci Linter
