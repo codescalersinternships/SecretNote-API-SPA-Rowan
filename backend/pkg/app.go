@@ -10,10 +10,11 @@ type App struct {
 	dataBase DB
 }
 
-func NewApp() *App {
-	app := App{router: gin.Default(), dataBase: *NewDB()}
+func NewApp() (App, error) {
+	db, err := NewDB()
+	app := App{router: gin.Default(), dataBase: db}
 	app.registerRoutes()
-	return &app
+	return app, err
 }
 
 func (app *App) registerRoutes() {

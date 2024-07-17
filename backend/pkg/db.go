@@ -12,9 +12,10 @@ type DB struct {
 }
 type Note struct {
 	gorm.Model
-	ID      uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()"`
+	ID      uuid.UUID `gorm:"type:uuid;default`
 	Title   string
 	Content string
+	UserID  uint
 	User    User
 }
 
@@ -24,61 +25,53 @@ type User struct {
 	Password string
 }
 
-func NewDB() *DB {
+func NewDB() (DB, error) {
 	db, err := gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatal("cannot launch database, we are in big trouble")
 	}
 	newDB := DB{db: db}
-	// newDB.db.AutoMigrate(&User{}, &Note{})
-	newDB.Migrate()
-	return &newDB
+	return newDB, newDB.Migrate()
 }
 func (dbm *DB) Migrate() error {
 	return dbm.db.AutoMigrate(&User{}, &Note{})
 }
 
-// imp check if user already exists !!
+func (note *Note) BeforeCreate(tx *gorm.DB) (err error) {
+	id, err := uuid.NewUUID()
+	if err != nil {
+		return err
+	}
+
+	note.ID = id
+	return
+}
+
 func (dbm *DB) CreateUser(username, password string) error {
 	user := User{Username: username, Password: password}
 	result := dbm.db.Create(&user)
-	// if result.Error == nil {
-	// 	return dbm.Migrate()
-	// }
 	return result.Error
 }
 
 func (dbm *DB) GetUserByUsername(username string) (User, error) {
 	var user User
 	result := dbm.db.First(&user, "Username = ?", username)
-	// if result.Error == nil {
-	// 	return user,dbm.Migrate()
-	// }
 	return user, result.Error
 }
 
 func (dbm *DB) GetUserByID(id uint) (User, error) {
 	var user User
 	result := dbm.db.First(&user, id)
-	// if result.Error == nil {
-	// 	return user,dbm.Migrate()
-	// }
 	return user, result.Error
 }
 
 func (dbm *DB) CreateNote(note Note) error {
 	result := dbm.db.Create(&note)
-	// if result.Error == nil {
-	// 	return dbm.Migrate()
-	// }
 	return result.Error
 }
 
 func (dbm *DB) GetNote(id uuid.UUID) (Note, error) {
 	var note Note
 	result := dbm.db.First(&note, "id = ?", id)
-	// if result.Error == nil {
-	// 	return note,dbm.Migrate()
-	// }
 	return note, result.Error
 }

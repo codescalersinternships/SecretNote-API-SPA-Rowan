@@ -4,3 +4,4 @@
 /backend/db
 /db
 /database
+/backend/gorm.db

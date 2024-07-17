@@ -7,7 +7,10 @@ import (
 )
 
 func main() {
-	app := pkg.NewApp()
+	app, err := pkg.NewApp()
+	if err != nil {
+		log.Fatal("db migration error probably")
+	}
 	if err := app.Run(); err != nil {
 		log.Fatal("server isn't starting")
 	}
