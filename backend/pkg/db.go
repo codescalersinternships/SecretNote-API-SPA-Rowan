@@ -20,7 +20,7 @@ type Note struct {
 
 type User struct {
 	gorm.Model
-	Username string
+	Username string `gorm:"unique"`
 	Password string
 }
 
@@ -38,6 +38,18 @@ func (dbm *DB) CreateUser(username, password string) error {
 	user := User{Username: username, Password: password}
 	result := dbm.db.Create(&user)
 	return result.Error
+}
+
+func (dbm *DB) GetUserByUsername(username string) (User, error) {
+	var user User
+	result := dbm.db.First(&user, "username = ?", username)
+	return user, result.Error
+}
+
+func (dbm *DB) GetUserByID(id uint) (User, error) {
+	var user User
+	result := dbm.db.First(&user, id)
+	return user, result.Error
 }
 
 func (dbm *DB) CreateNote(note Note) error {
