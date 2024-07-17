@@ -12,7 +12,7 @@ import (
 var secretKey = "Pxyehdyrowans_security"
 
 func (app *App) CreateJWTCookie(user User, c *gin.Context) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, jwt.MapClaims{
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id": user.ID,
 		// "username": user.Username,
 		"exp": time.Now().Add(time.Hour).Unix(),
@@ -33,7 +33,7 @@ func (app *App) RequireAuth(c *gin.Context) {
 		c.Error(err)
 		c.AbortWithStatus(http.StatusUnauthorized)
 	}
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	token, _ := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
