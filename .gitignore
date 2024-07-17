@@ -5,3 +5,4 @@
 /db
 /database
 /backend/gorm.db
+/frontend/node_modules
