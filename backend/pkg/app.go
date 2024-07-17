@@ -18,11 +18,14 @@ func NewApp() (App, error) {
 }
 
 func (app *App) registerRoutes() {
-	app.router.POST("/note/", app.createNote)
-	app.router.GET("/note/:noteID", app.getNote) // still handle id retreieving
 	app.router.POST("/signup", app.SignUp)
-	app.router.GET("/validate", app.RequireAuth, app.Validate)
 	app.router.POST("/login", app.Login)
+	app.router.POST("/note", app.RequireAuth, app.createNote)
+	app.router.GET("/note/:noteID", app.RequireAuth, app.getNote)
+	app.router.GET("/notes", app.RequireAuth, app.GetNotes)
+	app.router.GET("/expiredNotes", app.RequireAuth, app.GetExpiredNotes)
+	app.router.GET("/validate", app.RequireAuth, app.Validate)
+
 }
 func (app *App) Run() error {
 	return app.router.Run()

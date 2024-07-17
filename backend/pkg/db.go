@@ -1,10 +1,12 @@
 package pkg
 
 import (
+	"log"
+	"time"
+
 	"github.com/glebarez/sqlite"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
-	"log"
 )
 
 type DB struct {
@@ -65,13 +67,27 @@ func (dbm *DB) GetUserByID(id uint) (User, error) {
 	return user, result.Error
 }
 
-func (dbm *DB) CreateNote(note Note) error {
+func (dbm *DB) CreateNote(note Note, user User) error {
+	note.UserID = user.ID
+	note.User = user
 	result := dbm.db.Create(&note)
 	return result.Error
 }
 
-func (dbm *DB) GetNote(id uuid.UUID) (Note, error) {
+func (dbm *DB) GetNote(id uuid.UUID, user User) (Note, error) {
 	var note Note
 	result := dbm.db.First(&note, "id = ?", id)
 	return note, result.Error
+}
+
+func (dbm *DB) GetNotes(user User) ([]Note, error) {
+	var notes []Note
+	result := dbm.db.Where("user_id = ?", uint(user.ID)).Find(&notes)
+	return notes, result.Error
+}
+
+func (dbm *DB) GetExpiredNotes(user User) ([]Note, error) {
+	var notes []Note
+	result := dbm.db.Where("user_id = ?", uint(user.ID)).Where("created_at <", time.Now().Add(-2*time.Hour)).Find(&notes)
+	return notes, result.Error
 }

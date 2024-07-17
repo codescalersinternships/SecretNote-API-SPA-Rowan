@@ -43,7 +43,7 @@ func (app *App) RequireAuth(c *gin.Context) {
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
-		user, err := app.dataBase.GetUserByID(claims["id"].(uint))
+		user, err := app.dataBase.GetUserByID(uint(claims["id"].(float64)))
 		if err != nil {
 			c.Error(err)
 			c.AbortWithStatus(http.StatusInternalServerError)

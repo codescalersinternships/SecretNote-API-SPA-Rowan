@@ -9,19 +9,28 @@ import (
 )
 
 func (app *App) createNote(c *gin.Context) {
-	var dummynote dummyNote
-	if err := c.ShouldBindJSON(&dummynote); err != nil {
+	var dummyNote dummyNote
+	if err := c.ShouldBindJSON(&dummyNote); err != nil {
 		c.Error(err)
 		c.AbortWithStatus(http.StatusBadRequest)
 	}
-	fmt.Println(dummynote)
-	newNote := Note{Title: dummynote.Title, Content: dummynote.Content}
-	if err := app.dataBase.CreateNote(newNote); err != nil {
+	fmt.Println(dummyNote)
+	dummyUser, _ := c.Get("user")
+	fmt.Println(dummyUser)
+	fmt.Println("hellooo")
+	user, err := app.dataBase.GetUserByUsername(dummyUser.(User).Username)
+	if err != nil {
 		c.Error(err)
-		c.AbortWithStatus(http.StatusBadRequest)
+		c.AbortWithStatus(http.StatusInternalServerError)
+	}
+	newNote := Note{Title: dummyNote.Title, Content: dummyNote.Content}
+	if err := app.dataBase.CreateNote(newNote, user); err != nil {
+		c.Error(err)
+		c.AbortWithStatus(http.StatusInternalServerError)
 	}
 	c.JSON(http.StatusOK, newNote)
 }
+
 func (app *App) getNote(c *gin.Context) {
 	noteID := c.Param("noteID")
 	uuID, err := uuid.Parse(noteID)
@@ -29,14 +38,35 @@ func (app *App) getNote(c *gin.Context) {
 		c.Error(err)
 		c.AbortWithStatus(http.StatusBadRequest)
 	}
-
-	note, err := app.dataBase.GetNote(uuID)
+	dummyUser, _ := c.Get("user")
+	note, err := app.dataBase.GetNote(uuID, dummyUser.(User))
 	if err != nil {
 		c.Error(err)
 		c.AbortWithStatus(http.StatusBadRequest)
 	}
 	c.JSON(http.StatusOK, note)
 }
+
+func (app *App) GetNotes(c *gin.Context) {
+	dummyUser, _ := c.Get("user")
+	notes, _ := app.dataBase.GetNotes(dummyUser.(User))
+	// db returns errors if null found / empty
+	// if err != nil {
+	// 	c.Error(err)
+	// 	c.AbortWithStatus(http.StatusBadRequest)
+	// }
+	c.JSON(http.StatusOK, notes)
+}
+func (app *App) GetExpiredNotes(c *gin.Context) {
+	dummyUser, _ := c.Get("user")
+	notes, _ := app.dataBase.GetExpiredNotes(dummyUser.(User))
+	// if err != nil {
+	// 	c.Error(err)
+	// 	c.AbortWithStatus(http.StatusBadRequest)
+	// }
+	c.JSON(http.StatusOK, notes)
+}
+
 func (app *App) SignUp(c *gin.Context) {
 	var dummyuser dummyUser
 	if err := c.ShouldBindJSON(&dummyuser); err != nil {
