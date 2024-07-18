@@ -11,34 +11,28 @@
 </template>
 
 
-<script lang="ts">
-import { defineComponent, PropType, reactive } from "vue";
+<script setup lang="ts">
+import { ref, defineComponent, PropType, reactive, provide, Ref } from "vue";
+// import type {Props} from 
 interface User {
   Username: string
   Password: string
 }
-export default defineComponent({
-    name: "SignUp",
-    data(){
-        return {
-            user: {
-                Username : '',
-                Password : '',
-            } as User
-        };
-    },
-    methods:{
-        onSubmit(){
-            console.log(this.user)
-        }
-    }
-    // return {form, ons}
-});
+const user : Ref<User> = ref({Username:"", Password:""})
 
+function onSubmit(){
+    fetch("http://localhost:8080/signup", {
+        method: "POST",
+        body: JSON.stringify({
+            Username: user.value.Username,
+            Password: user.value.Password
+        }),
+    }).then(res => res.json()).then( res => console.log(res))
+
+}
 </script>
 
 <style scoped>
-/* input[type=text] */
 .signup{
     display: flex;
     flex-direction: column;

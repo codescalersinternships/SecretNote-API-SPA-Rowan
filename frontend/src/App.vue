@@ -11,14 +11,14 @@
    <SignUp/>
 </template>
 
-<script  lang="ts">
-import { defineComponent } from 'vue'
+<script setup  lang="ts">
+// import { defineComponent } from 'vue'
 // import HelloWorld from './components/HelloWorld.vue'
 import SignUp from './components/SignUp.vue'
-export default defineComponent({
-  name : "app",
-  components: {SignUp},
-});
+// export default defineComponent({
+//   name : "app",
+//   components: {SignUp},
+// });
 </script>
 
 
