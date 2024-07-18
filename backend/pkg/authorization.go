@@ -9,7 +9,7 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-var secretKey = "Pxyehdyrowans_security"
+var secret = "Pxyehdyrowans_security"
 
 func (app *App) CreateJWTCookie(user User, c *gin.Context) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -17,6 +17,7 @@ func (app *App) CreateJWTCookie(user User, c *gin.Context) (string, error) {
 		// "username": user.Username,
 		"exp": time.Now().Add(time.Hour).Unix(),
 	})
+	secretKey := string(user.ID) + secret
 	tokenString, err := token.SignedString([]byte(secretKey))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -37,6 +38,9 @@ func (app *App) RequireAuth(c *gin.Context) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
+		claims, _ := token.Claims.(jwt.MapClaims)
+		id := uint(claims["id"].(float64))
+		secretKey := string(id) + secret
 		return []byte(secretKey), nil
 	})
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
