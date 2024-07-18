@@ -8,6 +8,8 @@ import (
 	"net/http"
 )
 
+// createNote handles "/note" endpoint
+// requires authentication
 func (app *App) createNote(c *gin.Context) {
 	var dummyNote dummyNote
 	if err := c.ShouldBindJSON(&dummyNote); err != nil {
@@ -32,14 +34,15 @@ func (app *App) createNote(c *gin.Context) {
 	c.JSON(http.StatusOK, note)
 }
 
-func (app *App) getNote(c *gin.Context) {
+// GetNote handles "/note/:noteID" endpoint
+// doesn't requires authentication because it's fetched by its uuid which user shares
+func (app *App) GetNote(c *gin.Context) {
 	noteID := c.Param("noteID")
 	uuID, err := uuid.Parse(noteID)
 	if err != nil {
 		c.Error(err)
 		c.AbortWithStatus(http.StatusBadRequest)
 	}
-	// dummyUser, _ := c.Get("user")
 	note, err := app.dataBase.GetNote(uuID)
 	if err != nil {
 		c.Error(err)
@@ -48,6 +51,8 @@ func (app *App) getNote(c *gin.Context) {
 	c.JSON(http.StatusOK, note)
 }
 
+// GetNotes handles "/notes" endpoint
+// requires authentication
 func (app *App) GetNotes(c *gin.Context) {
 	dummyUser, _ := c.Get("user")
 	notes, _ := app.dataBase.GetNotes(dummyUser.(User))
@@ -58,6 +63,9 @@ func (app *App) GetNotes(c *gin.Context) {
 	// }
 	c.JSON(http.StatusOK, notes)
 }
+
+// GetExpiredNotes handles "/expiredNotes" endpoint
+// requires authentication
 func (app *App) GetExpiredNotes(c *gin.Context) {
 	dummyUser, _ := c.Get("user")
 	notes, _ := app.dataBase.GetExpiredNotes(dummyUser.(User))
@@ -68,6 +76,9 @@ func (app *App) GetExpiredNotes(c *gin.Context) {
 	c.JSON(http.StatusOK, notes)
 }
 
+// SignUp handles "/signup" endpoint
+// hashes user password before saving it to db
+// handles Authentication
 func (app *App) SignUp(c *gin.Context) {
 	var dummyuser dummyUser
 	if err := c.ShouldBindJSON(&dummyuser); err != nil {
@@ -90,6 +101,9 @@ func (app *App) SignUp(c *gin.Context) {
 	c.Status(http.StatusAccepted)
 }
 
+// Login handles "/login" endpoint
+// handles Authorization of user
+// Sets up JWT in cookies of browser
 func (app *App) Login(c *gin.Context) {
 	var dummyuser dummyUser
 	if err := c.ShouldBindJSON(&dummyuser); err != nil {

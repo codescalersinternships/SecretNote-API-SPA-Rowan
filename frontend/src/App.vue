@@ -17,8 +17,9 @@ import Login from './components/Login.vue'
 <template>
    <!-- <Login/> -->
    <!-- <SignUp/> -->
-  <router-link to="/signup"> Sign Up</router-link>
-  <router-link to="/login"> Log in</router-link>
+  <!-- <router-link to="/signup"> Sign Up</router-link> -->
+  <!-- <router-link to="/login"> Log in</router-link> -->
+    <router-view></router-view>
    
 </template>
 

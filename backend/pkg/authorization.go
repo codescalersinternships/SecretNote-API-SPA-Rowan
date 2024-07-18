@@ -11,6 +11,9 @@ import (
 
 var secret = "Pxyehdyrowans_security"
 
+// CreateJWTCookie creates JWT by SigningMethodHS256
+// JWT is created by secretkey relevant to each user
+// JWT is stored in browser cookie for later retreival
 func (app *App) CreateJWTCookie(user User, c *gin.Context) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id": user.ID,
@@ -28,6 +31,8 @@ func (app *App) CreateJWTCookie(user User, c *gin.Context) (string, error) {
 	return tokenString, nil
 }
 
+// RequireAuth is our middleware fuction that adds User to the gin context
+// Request then proceeds while having user set as a key on the request
 func (app *App) RequireAuth(c *gin.Context) {
 	tokenString, err := c.Cookie("Authorization")
 	if err != nil {
