@@ -9,3 +9,4 @@
 /database
 /backend/gorm.db
 /frontend/node_modules
+/frontend/src/components/HelloWorld.vue
