@@ -13,10 +13,16 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.22.x'
-      - name: Build
+      - name: Build Server Entry Point
         run: cd backend && go build -o serve cmd/server.go && cd ..
-      - name: Build db
-        run: cd backend && go build -o db pkg/db.go && cd ..
+      - name: Build App and DB
+        run: cd backend/pkg && go build . && cd .. && cd ..
+      # - name: Build db
+      #   run: cd backend && go build -o db pkg/db.go && cd ..
+      # - name: Build Authorization
+      #   run: cd backend && go build -o auth pkg/authorization.go && cd ..
+      # - name: Build endpoints
+      #   run: cd backend && go build -o endpoints pkg/endpoints.go && cd ..
     #   - name: Test with the Go CLI
     #     run: go test ./...
   Fmt:

@@ -2,6 +2,9 @@
 /backend/client
 /backend/serve
 /backend/db
+/backend/endpoint
+/backend/auth
+/backend/app
 /db
 /database
 /backend/gorm.db

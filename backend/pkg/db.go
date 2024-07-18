@@ -1,12 +1,11 @@
 package pkg
 
 import (
-	"log"
-	"time"
-
 	"github.com/glebarez/sqlite"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"log"
+	"time"
 )
 
 type DB struct {
@@ -17,6 +16,8 @@ type Note struct {
 	ID      uuid.UUID `gorm:"type:uuid;default`
 	Title   string
 	Content string
+	Views   int64
+	Expired bool
 	UserID  uint
 	User    User
 }
@@ -67,16 +68,22 @@ func (dbm *DB) GetUserByID(id uint) (User, error) {
 	return user, result.Error
 }
 
-func (dbm *DB) CreateNote(note Note, user User) error {
+func (dbm *DB) CreateNote(note Note, user User) (Note, error) {
 	note.UserID = user.ID
 	note.User = user
+	note.Expired = false
+	note.Views = 0
 	result := dbm.db.Create(&note)
-	return result.Error
+	return note, result.Error
 }
 
-func (dbm *DB) GetNote(id uuid.UUID, user User) (Note, error) {
+func (dbm *DB) GetNote(id uuid.UUID) (Note, error) {
 	var note Note
 	result := dbm.db.First(&note, "id = ?", id)
+	if !dbm.IsExpired(note) {
+		note.Views += 1
+		dbm.db.Save(&note)
+	}
 	return note, result.Error
 }
 
@@ -88,6 +95,21 @@ func (dbm *DB) GetNotes(user User) ([]Note, error) {
 
 func (dbm *DB) GetExpiredNotes(user User) ([]Note, error) {
 	var notes []Note
-	result := dbm.db.Where("user_id = ?", uint(user.ID)).Where("created_at <", time.Now().Add(-2*time.Hour)).Find(&notes)
+	result := dbm.db.Where("user_id = ?", uint(user.ID)).Where("expired = ?", true).Find(&notes)
 	return notes, result.Error
+}
+
+func (dbm *DB) IsExpired(note Note) bool {
+	if note.Views >= 10 {
+		note.Expired = true
+	}
+	currTime := time.Now().Add(-2 * time.Hour)
+	if note.CreatedAt.Year() < currTime.Year() || note.CreatedAt.Month() < currTime.Month() || note.CreatedAt.Day() < currTime.Day() {
+		note.Expired = true
+	}
+	if note.CreatedAt.Hour() < currTime.Hour() {
+		note.Expired = true
+	}
+	dbm.db.Save(&note)
+	return note.Expired
 }

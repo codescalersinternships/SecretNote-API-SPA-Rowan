@@ -1,7 +1,7 @@
 # SecretNote-API-SPA-Rowan
 A web application that allows users to securely share self-destructing secret notes using Golang and Vue.js
 
-## Backend 
+## Backend (Go Lang)
 
 ### Server Commands
 1. To Run Server:
@@ -12,7 +12,7 @@ A web application that allows users to securely share self-destructing secret no
    ```
    cd backend && go fmt ./... && cd ..
    ```
-## DataBase
+## DataBase (Sqlite Using GORM)
 1. The database is configured using an ORM (GORM) --> helped in giving a common interface to deal with various SQLs
 2. Database used is sqLite
 <!-- 3. 

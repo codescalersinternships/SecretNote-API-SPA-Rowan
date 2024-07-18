@@ -24,11 +24,12 @@ func (app *App) createNote(c *gin.Context) {
 		c.AbortWithStatus(http.StatusInternalServerError)
 	}
 	newNote := Note{Title: dummyNote.Title, Content: dummyNote.Content}
-	if err := app.dataBase.CreateNote(newNote, user); err != nil {
+	note, err := app.dataBase.CreateNote(newNote, user)
+	if err != nil {
 		c.Error(err)
 		c.AbortWithStatus(http.StatusInternalServerError)
 	}
-	c.JSON(http.StatusOK, newNote)
+	c.JSON(http.StatusOK, note)
 }
 
 func (app *App) getNote(c *gin.Context) {
@@ -38,8 +39,8 @@ func (app *App) getNote(c *gin.Context) {
 		c.Error(err)
 		c.AbortWithStatus(http.StatusBadRequest)
 	}
-	dummyUser, _ := c.Get("user")
-	note, err := app.dataBase.GetNote(uuID, dummyUser.(User))
+	// dummyUser, _ := c.Get("user")
+	note, err := app.dataBase.GetNote(uuID)
 	if err != nil {
 		c.Error(err)
 		c.AbortWithStatus(http.StatusBadRequest)
