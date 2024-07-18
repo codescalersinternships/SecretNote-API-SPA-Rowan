@@ -5,7 +5,7 @@
             <input placeholder="Username" v-model="user.Username" required class="input">
             <label class="labeling"> <b>Password</b></label>
             <input placeholder="Password" required v-model="user.Password" class="input">
-            <button class="signup_btn" @click="onSubmit">Sign Up</button>
+            <button class="signup-btn" @click="onSubmit">Sign Up</button>
         </div>
     </form>
 </template>
@@ -59,7 +59,7 @@ function onSubmit(){
     margin-bottom: 20px;
     padding: 10;
 }
-.signup_btn{
+.signup-btn{
     background-color: green;
     width: 50%;
     margin-top: 20px;

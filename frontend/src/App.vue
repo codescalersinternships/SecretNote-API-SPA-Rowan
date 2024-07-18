@@ -3,6 +3,7 @@
 // import { defineComponent } from 'vue'
 import SignUp from './components/SignUp.vue'
 import Login from './components/Login.vue'
+import Note from './components/Note.vue'
 // export default defineComponent({
 //   name : "app",
 //   components: {SignUp},
@@ -19,8 +20,8 @@ import Login from './components/Login.vue'
    <!-- <SignUp/> -->
   <!-- <router-link to="/signup"> Sign Up</router-link> -->
   <!-- <router-link to="/login"> Log in</router-link> -->
-    <router-view></router-view>
-   
+    <!-- <router-view></router-view> -->
+  <Note/>
 </template>
 
 

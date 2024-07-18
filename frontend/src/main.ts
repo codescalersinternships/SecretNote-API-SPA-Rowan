@@ -4,12 +4,14 @@ import './style.css'
 import App from './App.vue'
 import SignUp from './components/SignUp.vue'
 import Login from './components/Login.vue'
+import Note from './components/Note.vue'
 
 const router = createRouter({
     history: createWebHistory(),
     routes: [
         {path: '/signup', name: "SignUp", component: SignUp},
-        {path: '/login', name: "Login", component: Login}
+        {path: '/login', name: "Login", component: Login},
+        {path: '/note', name: "note", component: Note}
     ]
 })
 createApp(App).use(router).mount('#app')
