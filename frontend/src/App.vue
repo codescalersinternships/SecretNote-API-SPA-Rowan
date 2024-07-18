@@ -1,25 +1,26 @@
-<template>
-  <!-- <div> -->
-    <!-- <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div> -->
-  <!-- <HelloWorld/> -->
-   <SignUp/>
-</template>
 
-<script setup  lang="ts">
+<script setup lang="ts">
 // import { defineComponent } from 'vue'
-// import HelloWorld from './components/HelloWorld.vue'
 import SignUp from './components/SignUp.vue'
+import Login from './components/Login.vue'
 // export default defineComponent({
 //   name : "app",
 //   components: {SignUp},
 // });
+// const routes = {
+//   '/signup': SignUp,
+//   '/login': Login,
+// }
+
 </script>
+
+<template>
+   <!-- <Login/> -->
+   <!-- <SignUp/> -->
+  <router-link to="/signup"> Sign Up</router-link>
+  <router-link to="/login"> Log in</router-link>
+   
+</template>
 
 
 
