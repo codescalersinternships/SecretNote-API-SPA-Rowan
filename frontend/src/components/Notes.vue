@@ -1,14 +1,27 @@
 <template>
-    <form class="form">
-        <h2> Secret Note Creation </h2>
-        
-            <input class="title-area" type="text" v-model="note.Title" placeholder="Your Secret Note Title">
-        
-        
-            <textarea class="text-area" v-model="note.Content" placeholder="Content of your secrets"> </textarea>
-        
-        <button class="note-btn" @click="onSubmit">SUBMIT NOTE</button>
-    </form>
+    <div class="notes">
+        <h2>Your Not So Secret Secret-Notes</h2>
+        <ul>
+            <li>
+                <h3> note title</h3>
+                <p>
+                    Note content
+                </p>
+            </li>
+            <li>
+                <h3> note title</h3>
+                <p>
+                    Note content
+                </p>
+            </li>
+            <li>
+                <h3> note title</h3>
+                <p>
+                    Note content
+                </p>
+            </li>
+        </ul>
+    </div>
 </template>
 
 
@@ -34,7 +47,7 @@ function onSubmit(){
 </script>
 
 <style >
-.form{
+.notes{
     width: 400px;
     display: flex;
     flex-direction: column;
@@ -44,8 +57,6 @@ function onSubmit(){
     border: 20px;
     border-radius: 30px;
     margin: 20px, 20px, 20px, 20px;
-    /* font-size: 18px; */
-    /* margin-top: 0; */
 }
 .text-area{
     /* width: 200px; */

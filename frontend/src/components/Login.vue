@@ -12,7 +12,7 @@
 
 
 <script setup lang="ts">
-import { ref, defineComponent, PropType, reactive, provide, Ref } from "vue";
+import { ref, Ref } from "vue";
 // import type {Props} from 
 interface User {
   Username: string
@@ -20,15 +20,17 @@ interface User {
 }
 const user : Ref<User> = ref({Username:"", Password:""})
 
-function onSubmit(){
-    fetch("http://localhost:8080/login", {
+async function onSubmit(){
+    console.log("hello")
+    const res = await fetch("http://localhost:8080/login", {
         method: "POST",
         body: JSON.stringify({
             Username: user.value.Username,
             Password: user.value.Password
         }),
-    }).then(res => res.json()).then( res => console.log(res))
-
+    })
+    const data = res.json()
+    console.log;(data)
 }
 </script>
 

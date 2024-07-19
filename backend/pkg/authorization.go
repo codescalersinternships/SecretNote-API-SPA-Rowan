@@ -20,7 +20,7 @@ func (app *App) CreateJWTCookie(user User, c *gin.Context) (string, error) {
 		// "username": user.Username,
 		"exp": time.Now().Add(time.Hour).Unix(),
 	})
-	secretKey := string(user.ID) + secret
+	secretKey := fmt.Sprint(user.ID) + secret
 	tokenString, err := token.SignedString([]byte(secretKey))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -45,7 +45,7 @@ func (app *App) RequireAuth(c *gin.Context) {
 		}
 		claims, _ := token.Claims.(jwt.MapClaims)
 		id := uint(claims["id"].(float64))
-		secretKey := string(id) + secret
+		secretKey := fmt.Sprint(id) + secret
 		return []byte(secretKey), nil
 	})
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {

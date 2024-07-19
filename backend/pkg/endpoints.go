@@ -8,9 +8,9 @@ import (
 	"net/http"
 )
 
-// createNote handles "/note" endpoint
+// CreateNote handles "/note" endpoint
 // requires authentication
-func (app *App) createNote(c *gin.Context) {
+func (app *App) CreateNote(c *gin.Context) {
 	var dummyNote dummyNote
 	if err := c.ShouldBindJSON(&dummyNote); err != nil {
 		c.Error(err)
@@ -141,7 +141,8 @@ func (app *App) Login(c *gin.Context) {
 	}
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", tokenString, 3600, "", "", false, true)
-	c.Status(http.StatusAccepted)
+	// c.Status(http.StatusAccepted)
+	c.JSON(http.StatusAccepted, actualUser)
 }
 
 type dummyNote struct {
