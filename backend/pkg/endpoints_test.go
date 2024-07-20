@@ -17,7 +17,7 @@ func Test_SignUp(t *testing.T) {
 	db, _ := NewDB("test.db")
 	app := App{router: gin.Default(), dataBase: db}
 	user := dummyUser{
-		Username: "rowan",
+		Username: "rue",
 		Password: "slays",
 	}
 	userToSend, _ := json.Marshal(user)
@@ -56,7 +56,7 @@ func Test_CreateNote(t *testing.T) {
 	request, _ := http.NewRequest(http.MethodPost, "/note", bytes.NewBuffer(noteToSend))
 	// request.URL.Query().Add("id", fmt.Sprint(1))
 	response := httptest.NewRecorder()
-	router.POST("/note", app.CreateNote)
+	router.POST("/note", app.SetUserMiddleware, app.CreateNote)
 	router.ServeHTTP(response, request)
 	body, _ := io.ReadAll(response.Body)
 	var noteCreated dummyNote
@@ -64,8 +64,7 @@ func Test_CreateNote(t *testing.T) {
 	if err != nil {
 		t.Error()
 	}
-	assert.Equal(t, http.StatusAccepted, response.Code)
-	// assert.Equal(t, dummyNote.Title, noteCreated.Title)
+	assert.Equal(t, note, noteCreated)
 	fmt.Println(noteCreated)
 }
 
@@ -78,4 +77,11 @@ func Test_GetNote(t *testing.T) {
 	router.GET("/note/987654345678", app.GetNote) // non existing note
 	router.ServeHTTP(response, request)
 	assert.Equal(t, 404, response.Code)
+}
+
+func (app *App) SetUserMiddleware(c *gin.Context) {
+	user := User{}
+	user.ID = 2
+	c.Set("user", user)
+	c.Next()
 }
