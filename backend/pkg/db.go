@@ -35,8 +35,12 @@ type User struct {
 }
 
 // NewDB initializes database and auto migrates tables
-func NewDB() (DB, error) {
-	db, err := gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{})
+func NewDB(file ...string) (DB, error) {
+	filePath := "gorm.db"
+	if len(file) != 0 {
+		filePath = file[0]
+	}
+	db, err := gorm.Open(sqlite.Open(filePath), &gorm.Config{})
 	if err != nil {
 		log.Fatal("cannot launch database, we are in big trouble")
 	}

@@ -48,6 +48,9 @@ func (app *App) GetNote(c *gin.Context) {
 		c.Error(err)
 		c.AbortWithStatus(http.StatusBadRequest)
 	}
+	// if uint(note.ID) == 0 {
+
+	// }
 	c.JSON(http.StatusOK, note)
 }
 

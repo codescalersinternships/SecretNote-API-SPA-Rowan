@@ -17,13 +17,13 @@ import Notes from './components/Notes.vue';
 </script>
 
 <template>
-   <!-- <Login/> -->
+   <Login/>
    <!-- <SignUp/> -->
-    <h1> Choose Your Fighter</h1>
+    <!-- <h1> Choose Your Fighter</h1>
     <div class="home">
       <ul>
         <li>
-          <!-- <router-link to="/signup"> Sign Up</router-link> -->
+          <router-link to="/signup"> Sign Up</router-link>
           <a href="/signup"> Sign UP</a>
         </li>
         <li>
@@ -36,10 +36,8 @@ import Notes from './components/Notes.vue';
           <router-link to="/notes"> Check out Notes</router-link>
         </li>
       </ul>
-    </div>
+    </div> -->
     
-  
-  
     <!-- <router-view></router-view> -->
    <!-- <Note/> -->
   <!-- <Notes/> -->

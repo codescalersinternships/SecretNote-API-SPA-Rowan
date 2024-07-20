@@ -5,8 +5,9 @@
 /backend/endpoint
 /backend/auth
 /backend/app
+/backend/gorm.db
+/backend/pkg/test.db
 /db
 /database
-/backend/gorm.db
 /frontend/node_modules
 /frontend/src/components/HelloWorld.vue

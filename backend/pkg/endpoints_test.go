@@ -4,17 +4,18 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/assert"
-	"golang.org/x/crypto/bcrypt"
 )
 
 func Test_SignUp(t *testing.T) {
 	router := gin.Default()
+	db, _ := NewDB("test.db")
+	app := App{router: gin.Default(), dataBase: db}
 	user := dummyUser{
 		Username: "rowan",
 		Password: "slays",
@@ -22,13 +23,15 @@ func Test_SignUp(t *testing.T) {
 	userToSend, _ := json.Marshal(user)
 	request, _ := http.NewRequest(http.MethodPost, "/signup", bytes.NewBuffer(userToSend))
 	response := httptest.NewRecorder()
-	router.POST("/signup", SignUp)
+	router.POST("/signup", app.SignUp)
 	router.ServeHTTP(response, request)
 	assert.Equal(t, http.StatusAccepted, response.Code)
 }
 
 func Test_Login(t *testing.T) {
 	router := gin.Default()
+	db, _ := NewDB("test.db")
+	app := App{router: gin.Default(), dataBase: db}
 	user := dummyUser{
 		Username: "rowan",
 		Password: "slays",
@@ -36,63 +39,43 @@ func Test_Login(t *testing.T) {
 	userToSend, _ := json.Marshal(user)
 	request, _ := http.NewRequest(http.MethodPost, "/login", bytes.NewBuffer(userToSend))
 	response := httptest.NewRecorder()
-	router.POST("/login", Login)
+	router.POST("/login", app.Login)
 	router.ServeHTTP(response, request)
 	assert.Equal(t, http.StatusAccepted, response.Code)
 }
 
-func SignUp(c *gin.Context) {
-	var dummyuser dummyUser
-	fmt.Println(dummyuser)
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(dummyuser.Password), 10)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "failed to hash password",
-		})
-		return
+func Test_CreateNote(t *testing.T) {
+	router := gin.Default()
+	db, _ := NewDB("test.db")
+	app := App{router: gin.Default(), dataBase: db}
+	note := dummyNote{
+		Title:   "important",
+		Content: "I DON'T LIKE FISH",
 	}
-	dummyuser.Password = string(hashedPassword)
-	c.Status(http.StatusAccepted)
+	noteToSend, _ := json.Marshal(note)
+	request, _ := http.NewRequest(http.MethodPost, "/note", bytes.NewBuffer(noteToSend))
+	// request.URL.Query().Add("id", fmt.Sprint(1))
+	response := httptest.NewRecorder()
+	router.POST("/note", app.CreateNote)
+	router.ServeHTTP(response, request)
+	body, _ := io.ReadAll(response.Body)
+	var noteCreated dummyNote
+	err := json.Unmarshal(body, &noteCreated)
+	if err != nil {
+		t.Error()
+	}
+	assert.Equal(t, http.StatusAccepted, response.Code)
+	// assert.Equal(t, dummyNote.Title, noteCreated.Title)
+	fmt.Println(noteCreated)
 }
 
-func Login(c *gin.Context) {
-	var dummyuser dummyUser
-	if err := c.ShouldBindJSON(&dummyuser); err != nil {
-		c.Error(err)
-		c.AbortWithStatus(http.StatusBadRequest)
-	}
-
-	actualUser := dummyUser{
-		Username: "rowan",
-		Password: "slays",
-	}
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(actualUser.Password), 10)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "failed to hash password",
-		})
-		return
-	}
-	actualUser.Password = string(hashedPassword)
-	if err != nil {
-		c.Error(err)
-		c.AbortWithStatus(http.StatusInternalServerError)
-	}
-	err = bcrypt.CompareHashAndPassword([]byte(actualUser.Password), []byte(dummyuser.Password))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "invalid username or password",
-		})
-		return
-	}
-	// tokenString, err := app.CreateJWTCookie(actualUser, c)
-	// if err != nil {
-	// 	c.JSON(http.StatusInternalServerError, gin.H{
-	// 		"error": "failed to create token",
-	// 	})
-	// 	return
-	// }
-	// c.SetSameSite(http.SameSiteLaxMode)
-	// c.SetCookie("Authorization", tokenString, 3600, "", "", false, true)
-	c.Status(http.StatusAccepted)
+func Test_GetNote(t *testing.T) {
+	router := gin.Default()
+	db, _ := NewDB("test.db")
+	app := App{router: gin.Default(), dataBase: db}
+	request, _ := http.NewRequest(http.MethodPost, "/note", nil)
+	response := httptest.NewRecorder()
+	router.GET("/note/987654345678", app.GetNote) // non existing note
+	router.ServeHTTP(response, request)
+	assert.Equal(t, 404, response.Code)
 }
