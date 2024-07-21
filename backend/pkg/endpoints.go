@@ -58,12 +58,13 @@ func (app *App) GetNote(c *gin.Context) {
 // requires authentication
 func (app *App) GetNotes(c *gin.Context) {
 	dummyUser, _ := c.Get("user")
-	notes, _ := app.dataBase.GetNotes(dummyUser.(User))
+	notes, err := app.dataBase.GetNotes(dummyUser.(User))
+	fmt.Println(notes)
 	// db returns errors if null found / empty
-	// if err != nil {
-	// 	c.Error(err)
-	// 	c.AbortWithStatus(http.StatusBadRequest)
-	// }
+	if err != nil {
+		c.Error(err)
+		c.AbortWithStatus(http.StatusBadRequest)
+	}
 	c.JSON(http.StatusOK, notes)
 }
 
@@ -143,7 +144,7 @@ func (app *App) Login(c *gin.Context) {
 		return
 	}
 	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("Authorization", tokenString, 3600, "", "", false, true)
+	c.SetCookie("Authorization", tokenString, 3600, "/", "localhost", false, true)
 	// c.Status(http.StatusAccepted)
 	c.JSON(http.StatusAccepted, actualUser)
 }

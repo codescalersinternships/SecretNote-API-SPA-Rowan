@@ -17,7 +17,7 @@ import Notes from './components/Notes.vue';
 </script>
 
 <template>
-   <Login/>
+   <!-- <Login/> -->
    <!-- <SignUp/> -->
     <!-- <h1> Choose Your Fighter</h1>
     <div class="home">
@@ -38,7 +38,7 @@ import Notes from './components/Notes.vue';
       </ul>
     </div> -->
     
-    <!-- <router-view></router-view> -->
+    <router-view></router-view>
    <!-- <Note/> -->
   <!-- <Notes/> -->
 </template>

@@ -1,6 +1,6 @@
 <template>
     <div class="notes">
-        <h2>Your Not So Secret Secret-Notes</h2>
+        <h2 @click="onSubmit">Your Not So Secret Secret-Notes</h2>
         <ul>
             <li>
                 <h3> note title</h3>
@@ -32,17 +32,18 @@ interface Note {
   Title: string
   Content: string
 }
-const note : Ref<Note> = ref({Title:"", Content:""})
+// const note : Ref<Note[]> = ref()
 
 function onSubmit(){
-    fetch("http://localhost:8080/note", {
-        method: "POST",
-        body: JSON.stringify({
-            Title: note.value.Title,
-            Content: note.value.Content
-        }),
+    fetch("http://localhost:8080/notes", {
+        method: "GET",
+        credentials: "include",
+        // body: JSON.stringify({
+        //     Title: note.value.Title,
+        //     Content: note.value.Content
+        // }),
     }).then(res => res.json()).then( res => console.log(res))
-
+    // const data = res
 }
 </script>
 

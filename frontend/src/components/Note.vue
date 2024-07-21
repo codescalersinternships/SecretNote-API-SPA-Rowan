@@ -24,6 +24,7 @@ const note : Ref<Note> = ref({Title:"", Content:""})
 function onSubmit(){
     fetch("http://localhost:8080/note", {
         method: "POST",
+        credentials: "include",
         body: JSON.stringify({
             Title: note.value.Title,
             Content: note.value.Content

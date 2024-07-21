@@ -13,6 +13,7 @@
 
 <script setup lang="ts">
 import { ref, Ref } from "vue";
+import router from "../main";
 // import type {Props} from 
 interface User {
   Username: string
@@ -22,15 +23,31 @@ const user : Ref<User> = ref({Username:"", Password:""})
 
 async function onSubmit(){
     console.log("hello")
-    const res = await fetch("http://localhost:8080/login", {
+    const response = fetch("http://localhost:8080/login", {
         method: "POST",
+        // headers: {
+        //     'Content-Type': 'application/json',
+        // },
+        credentials: "include",
         body: JSON.stringify({
             Username: user.value.Username,
             Password: user.value.Password
         }),
-    })
-    const data = res.json()
-    console.log;(data)
+    });
+    // const res = await fetch("http://localhost:8080/login", {
+    //     method: "POST",
+    //     body: JSON.stringify({
+    //         Username: user.value.Username,
+    //         Password: user.value.Password
+    //     }),
+    // })
+    const data = (await response).json
+    if ((await response).ok){
+        
+    }
+    console.log(response)
+    console.log(data)
+    router.replace('/note')
 }
 </script>
 

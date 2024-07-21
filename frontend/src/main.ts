@@ -16,4 +16,5 @@ const router = createRouter({
         {path: '/notes', name: "notes", component: Notes},
     ]
 })
+export default router
 createApp(App).use(router).mount('#app')
