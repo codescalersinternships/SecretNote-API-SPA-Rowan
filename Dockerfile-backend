@@ -1,0 +1,9 @@
+FROM golang:1.22.4-alpine AS builder
+WORKDIR /src
+COPY . .
+RUN cd backend && go build -o /cmd ./cmd/server.go
+
+FROM scratch AS final
+WORKDIR /app
+COPY --from=builder /cmd /app
+ENTRYPOINT [ "./cmd" ]
