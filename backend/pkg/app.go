@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,11 +18,18 @@ func NewApp() (App, error) {
 	db, err := NewDB()
 	app := App{router: gin.Default(), dataBase: db}
 	app.registerRoutes()
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://localhost:5173"}
+	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
+	config.AllowHeaders = []string{"Origin", "Content-Type", "Access-Control-Allow-Headers", "Authorization"}
+	config.ExposeHeaders = []string{"Content-Length"}
+	config.AllowCredentials = true
+	app.router.Use(cors.New(config))
 	return app, err
 }
 
 func (app *App) registerRoutes() {
-	app.router.Use(app.corsMiddleware())
+	// app.router.Use(app.corsMiddleware())
 	app.router.POST("/signup", app.SignUp)
 	app.router.POST("/login", app.Login)
 	app.router.POST("/note", app.RequireAuth, app.CreateNote)

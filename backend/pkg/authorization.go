@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 )
@@ -69,21 +70,27 @@ func (app *App) RequireAuth(c *gin.Context) {
 
 func (app *App) corsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		config := cors.DefaultConfig()
+		config.AllowOrigins = []string{"http://localhost:5173"}
+		config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
+		config.AllowHeaders = []string{"Origin", "Content-Type", "Access-Control-Allow-Headers", "Authorization"}
+		config.AllowCredentials = true
 		// c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		// c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173", "hrr")
+		// c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		// c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
+		// c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		// c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
+		// c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, Origin, Cache-Control, X-Requested-With")
 		// c.Writer.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 		// c.Writer.Header().Set("Pragma", "no-cache")
 		// c.Writer.Header().Set("Expires", "0")
 
 		// if c.Request.Method == "OPTIONS" {
-		//     c.AbortWithStatus(204)
+		//     c.Status(http.StatusOK)
 		//     return
 		// }
-
+		app.router.Use(cors.New(config))
 		c.Next()
 	}
 }

@@ -40,6 +40,7 @@ func (app *App) CreateNote(c *gin.Context) {
 func (app *App) GetNote(c *gin.Context) {
 	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	noteID := c.Param("noteID")
+	fmt.Println(noteID)
 	uuID, err := uuid.Parse(noteID)
 	if err != nil {
 		c.Error(err)
