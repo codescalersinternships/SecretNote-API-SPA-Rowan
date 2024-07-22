@@ -11,6 +11,7 @@ import (
 // CreateNote handles "/note" endpoint
 // requires authentication
 func (app *App) CreateNote(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	var dummyNote dummyNote
 	if err := c.ShouldBindJSON(&dummyNote); err != nil {
 		c.Error(err)
@@ -37,6 +38,7 @@ func (app *App) CreateNote(c *gin.Context) {
 // GetNote handles "/note/:noteID" endpoint
 // doesn't requires authentication because it's fetched by its uuid which user shares
 func (app *App) GetNote(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	noteID := c.Param("noteID")
 	uuID, err := uuid.Parse(noteID)
 	if err != nil {
@@ -57,6 +59,7 @@ func (app *App) GetNote(c *gin.Context) {
 // GetNotes handles "/notes" endpoint
 // requires authentication
 func (app *App) GetNotes(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	dummyUser, _ := c.Get("user")
 	notes, err := app.dataBase.GetNotes(dummyUser.(User))
 	fmt.Println(notes)
@@ -71,6 +74,7 @@ func (app *App) GetNotes(c *gin.Context) {
 // GetExpiredNotes handles "/expiredNotes" endpoint
 // requires authentication
 func (app *App) GetExpiredNotes(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	dummyUser, _ := c.Get("user")
 	notes, _ := app.dataBase.GetExpiredNotes(dummyUser.(User))
 	// if err != nil {
@@ -84,6 +88,7 @@ func (app *App) GetExpiredNotes(c *gin.Context) {
 // hashes user password before saving it to db
 // handles Authentication
 func (app *App) SignUp(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	var dummyuser dummyUser
 	if err := c.ShouldBindJSON(&dummyuser); err != nil {
 		c.Error(err)
@@ -109,6 +114,8 @@ func (app *App) SignUp(c *gin.Context) {
 // handles Authorization of user
 // Sets up JWT in cookies of browser
 func (app *App) Login(c *gin.Context) {
+	// c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	// c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
 	var dummyuser dummyUser
 	if err := c.ShouldBindJSON(&dummyuser); err != nil {
 		c.Error(err)
@@ -146,6 +153,7 @@ func (app *App) Login(c *gin.Context) {
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", tokenString, 3600, "/", "localhost", false, true)
 	// c.Status(http.StatusAccepted)
+	// c.SetSameSite(http.SameSiteNoneMode)
 	c.JSON(http.StatusAccepted, actualUser)
 }
 

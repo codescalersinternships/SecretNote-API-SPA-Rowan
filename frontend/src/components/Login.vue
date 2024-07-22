@@ -23,17 +23,64 @@ const user : Ref<User> = ref({Username:"", Password:""})
 
 async function onSubmit(){
     console.log("hello")
-    const response = fetch("http://localhost:8080/login", {
-        method: "POST",
-        // headers: {
-        //     'Content-Type': 'application/json',
-        // },
-        credentials: "include",
-        body: JSON.stringify({
-            Username: user.value.Username,
-            Password: user.value.Password
-        }),
-    });
+    try{
+        const res = await fetch("http://localhost:8080/login", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Cache-Control': 'no-cache'
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                Username: user.value.Username,
+                Password: user.value.Password
+            }),
+        })
+        if (!res.ok) {
+            console.log(res.status);
+        }
+        console.log("hello before text")
+        console.log(res.text)
+        try {
+            const json = await res.json()
+            console.log(json);
+            router.replace('/note')
+        } catch(error) {
+            console.log(error)
+        }
+        
+        console.log("mmmmmmm")
+        
+    } catch (error) {
+        console.error(error)
+        console.log(error)
+    }
+
+    // const res = fetch("http://localhost:8080/login", {
+    //     method: "POST",
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //     },
+    //     credentials: "include",
+    //     body: JSON.stringify({
+    //         Username: user.value.Username,
+    //         Password: user.value.Password
+    //     }),
+    // }).then((response) => {
+    //     response.json()
+    // }).then((data) =>{
+    //     console.log(data)
+    // }).then(()=> {
+    //     console.log(res)
+    // })
+    // .then((response) => {
+    //       response.json().then((data) => {
+    //         console.log(data)
+    //       });
+    //     })
+    //     .catch((err) => {
+    //       console.error(err);
+    //     });
     // const res = await fetch("http://localhost:8080/login", {
     //     method: "POST",
     //     body: JSON.stringify({
@@ -41,12 +88,13 @@ async function onSubmit(){
     //         Password: user.value.Password
     //     }),
     // })
-    const data = (await response).json
-    if ((await response).ok){
+    // const data = await res
+    // if ((await response).ok){
         
-    }
-    console.log(response)
-    console.log(data)
+    // }
+    // console.log(res)
+    // console.log(data)
+    console.log("aaaaaaaaaaaaaaa")
     router.replace('/note')
 }
 </script>

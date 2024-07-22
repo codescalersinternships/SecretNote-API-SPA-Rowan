@@ -21,6 +21,7 @@ func NewApp() (App, error) {
 }
 
 func (app *App) registerRoutes() {
+	app.router.Use(app.corsMiddleware())
 	app.router.POST("/signup", app.SignUp)
 	app.router.POST("/login", app.Login)
 	app.router.POST("/note", app.RequireAuth, app.CreateNote)
